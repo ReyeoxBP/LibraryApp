@@ -1,1 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+.container-card{
+    margin: 20px;
+    padding: 20px 20px 0px 20px;
+    border: 1px solid #d6d6d6;
+    border-radius: 4px;
+}
+.container-card-header{
+    margin: 5px auto 5px 0px;
+}
+
+
+
+.button-login{
+    text-align:left!important;
+}
+
+@media screen and(max-width: 768px){
+    .button-login{
+        text-align: center !important;
+        margin-bottom: 10px;
+    }
+}
+
+.text-alert{
+    color:#d73038;
+}
