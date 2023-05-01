@@ -5,6 +5,8 @@ import { UserService } from 'src/app/services/users/user.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { CategoryService } from 'src/app/services/categories/category.service';
 import { User } from 'src/app/models/user';
+import { Category } from 'src/app/models/category';
+import { AlertService } from 'src/app/services/alert/alert.service';
 
 @Component({
   selector: 'app-register',
@@ -15,36 +17,47 @@ export class RegisterComponent implements OnInit {
     
   // Declaration Vars
   registerForm: FormGroup;
-  categories: string[] = [];
+  categories: Category[] = [];
   jsonObject: User;
+  submitted: boolean = false;
+  showErrorCategory: boolean = false;
  
-  constructor(private userService: UserService, private categoryService: CategoryService, private authService: AuthService) { 
+  constructor(private userService: UserService, private categoryService: CategoryService, private authService: AuthService, private alertService: AlertService) { 
     this.registerForm = new FormGroup({
       'name': new FormControl('', {validators: Validators.required, asyncValidators: this.userNameValid()}),
       'email': new FormControl('',[Validators.required, Validators.email]),
       'password': new FormControl('',[Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/)]),
       'confirmPassword': new FormControl('', {validators: [Validators.required]}),
       'category': new FormArray([], [Validators.required, this.minSelections(3)])
-    }, this.passwordMatch('password','confirmPassword'));
+    },this.passwordMatch('password','confirmPassword'));
     this.jsonObject = {
       name: '',
       email: '',
       password: '',
       category: []
     }
-   
+
+  
     
 }
+
+
+
 
   ngOnInit(): void {
     this.categoryService.getCategories().subscribe(res =>{
       this.categories = res;
-      console.log(this.categories);
   });
+
+  this.categories.forEach(categoria =>{
+    const control = new FormControl(false); 
+    this.registerForm.addControl(categoria.description, control);
+});
   }
 
 
   register(): void{
+    this.submitted = true;
     this.jsonObject = {
       name: this.registerForm.value.name,
       email: this.registerForm.value.email,
@@ -53,10 +66,11 @@ export class RegisterComponent implements OnInit {
     }
     this.authService.register(this.jsonObject).subscribe({
       next: res =>{
-        console.log(res);
+        this.alertService.showSuccess('Usuario registrado correctamente');
       },
       error: err =>{
         console.log(err);
+        this.alertService.showError('Error al registrar el usuario');
       }
     });
   }
@@ -69,6 +83,22 @@ export class RegisterComponent implements OnInit {
       }
       return null;
     };
+  }
+
+  onCheckboxChange(event: any) {    
+    const selectedCategories = (this.registerForm.controls['category'] as FormArray);
+    if (event.target.checked) {
+      selectedCategories.push(new FormControl(parseInt(event.target.value)));
+    } else {
+      const index = selectedCategories.controls
+      .findIndex(x => x.value === event.target.value);
+      selectedCategories.removeAt(index);
+    }
+
+    if(selectedCategories.length===0){
+      this.showErrorCategory = true;
+    }
+    
   }
 
   passwordMatch(password: string, confirmPassword: string): ValidatorFn {

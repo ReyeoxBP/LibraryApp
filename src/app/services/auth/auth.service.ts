@@ -23,8 +23,6 @@ export class AuthService {
   }
 
   register(user: User): Observable<any> {
-    return this.http.post(this.apiUrl + '/users/create', {
-      user
-    }, httpOptions);
+    return this.http.post(this.apiUrl + '/users/create', user, httpOptions);
   }
 }

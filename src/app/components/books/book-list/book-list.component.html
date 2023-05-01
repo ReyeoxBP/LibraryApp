@@ -6,15 +6,18 @@
             </div> 
         </div> -->
     
-    <div class="col-md-3">
+    <div class="col-md-4">
       <h2>Tus libros</h2>
     </div>
-    <div class="col-md-4" style="margin-right: 20px">
+    <div class="col-md-2" style="margin-right: 20px">
 
     </div>
-    <div class="col-md-2">
-      <a class="btn btn-light" style="border: 1px solid #d8d8d8; background-color: #d8d8d8;"
-        routerLink="/bookRegister">Agregar Libro</a>
+    <div class="col-md-3">
+      <!-- <a class="btn btn-light" style="border: 1px solid #d8d8d8; background-color: #d8d8d8;"
+        routerLink="/bookRegister">Agregar Libro</a> -->
+        <pichincha-button  routerLink="/book/register" size="sm"  id="button"  color="secondary">
+          Agregar Libro
+      </pichincha-button>
     </div>
   </div>
   <div class="row my-4 justify-content-center">
@@ -39,7 +42,7 @@
   <div class="row my-4 justify-content-center">
     <div class="col-md-3" *ngFor="let book of books">
       <div class="card mb-4 box-shadow">
-        <div class="card-body" style="width: 253px; height: 325px; display: flex">
+        <div class="card-body card-book" >
           <img class="card-img-top" src="{{book.image}}" alt="{{book.title}}">
         </div>
       </div>

@@ -7,10 +7,16 @@
 }
 .container-card-header{
     margin: 5px auto 5px 0px;
+} 
+
+.card-book{
+    width: auto;
+     height: 325px; 
+     display: flex;
 }
 
 
-
+//Extra class to buttons
 .button-login{
     text-align:left!important;
 }
@@ -20,8 +26,35 @@
         text-align: center !important;
         margin-bottom: 10px;
     }
+    .card-book{
+        width: 100%;
+        height: 256px !important;
+        display:flex;
+    }
+   
 }
 
 .text-alert{
     color:#d73038;
 }
+
+//ScrollBar Styles
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }

@@ -1,9 +1,6 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
-
+import {Component,OnInit} from '@angular/core';
 import { CategoryService } from 'src/app/services/categories/category.service';
+import { Category } from 'src/app/models/category';
 
 @Component({
   selector: 'app-book-list',
@@ -13,7 +10,7 @@ import { CategoryService } from 'src/app/services/categories/category.service';
 export class BookListComponent implements OnInit {
   // i need to create a book array to store the books
   searchText: string = "";
-  categories: string[] = [];
+  categories: Category[] = [];
   categoryFilter: string = "";
 
 

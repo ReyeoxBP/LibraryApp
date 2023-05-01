@@ -1,4 +1,5 @@
 <div class="container" style="margin-top: 10px">
+  <app-alert></app-alert>
   <div class="row">
     <div class="col-md-3">
 
@@ -10,7 +11,7 @@
           <h3>Registrarse</h3>
         </div>
         <hr>
-        <form [formGroup]="registerForm">
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
           <div class="form-group">
             <label for="nameInput">Nombre de usuario</label>
             <input class="form-control" type="text" name="nameInput" id="nameInput" formControlName="name"
@@ -18,7 +19,7 @@
             <div *ngIf="registerForm.get('name')?.errors?.['exists']">
               <small class="text-alert">El nombre de usuario ya existe, debes seleccionar uno diferente.</small>
             </div>
-            <div *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.value===''">
+            <div *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.value==='' || registerForm.get('name')?.value==='' && submitted">
               <small class="text-alert">Nombre de usuario requerido.</small>
             </div>
           </div>
@@ -29,7 +30,7 @@
             <div *ngIf="registerForm.get('email')?.errors?.['email']">
               <small class="text-alert">Por favor ingresa un correo electrónico valido.</small>
             </div>
-            <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.value ===''">
+            <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.value ==='' ||  submitted && registerForm.get('email')?.value ===''">
               <small class="text-alert">Correo es requerido</small>
             </div>
 
@@ -41,15 +42,16 @@
 
 
             <div
-              *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)">
+              *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched) || submitted">
               <div *ngIf="registerForm.get('password')?.errors?.['minlength']">
                 <small class="text-alert">La contraseña debe tener al menos 8 carácteres</small>
               </div>
-              <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.value ===''">
+              <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.value ==='' || registerForm.get('password')?.value ==='' && submitted">
                 <small class="text-alert">Contraseña requerida</small>
               </div>
               <div *ngIf="registerForm.get('password')?.errors?.['pattern']">
-                <small class="text-alert">La contraseña debe tener al menos una mayúscula, un número y un carácter especial</small>
+                <small class="text-alert">La contraseña debe tener al menos una mayúscula, un número y un carácter
+                  especial</small>
               </div>
             </div>
 
@@ -58,38 +60,44 @@
             <label for="emailInput">Confirmar contraseña</label>
             <input class="form-control" type="password" name="confirmPassword" id="confirmPassword"
               formControlName="confirmPassword" placeholder="******" required>
-              <div *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">
-                <small class="text-alert">Contraseñas no coinciden</small>
-              </div>
-          </div>
+            <div
+              *ngIf="registerForm.get('confirmPassword')?.errors?.['required'] && (registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.errors?.['required']) || registerForm.get('confirmPassword')?.errors?.['required'] && submitted">
+              <small class="text-alert">Confirmar contraseña es obligatorio</small>
+            </div>
+            <div *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">
+              <small class="text-alert">Contraseñas no coinciden</small>
+            </div>
+          </div>        
           <h4><strong>Categorias</strong></h4>
+
+          <div style="height: 300px; overflow: auto;">
+            <div *ngFor="let category of categories; let i=index">
+              <input type="checkbox" formArrayName="category" [value]="category.id"
+                (change)="onCheckboxChange($event)" />
+              {{ category.description}}
+            </div>
+          </div>
+          <!-- <div *ngIf="registerForm.get('category')?.errors?.['required']">
+            Categorías es obligatorio.
+          </div> -->
+      
           
-          <div *ngFor="let categoria of categories; let i = index"> 
-            <div class="form-check">
-              <label>
-              <input  [value]="categoria" type="checkbox" formArrayName="category">
-              {{categoria}}
-              </label>
-            </div>
+          <div *ngIf="registerForm.get('category')?.errors?.['minSelections'] && showErrorCategory">
+            <small class="text-alert">Se requieren al menos 3 categorías seleccionadas.</small>
           </div>
-          <div *ngIf="registerForm.get('category')?.invalid && (registerForm.get('category')?.dirty || registerForm.get('category')?.touched)" class="alert alert-danger">
-            <div *ngIf="registerForm.get('category')?.errors?.['required']">
-              Categorías es obligatorio.
-            </div>
-            <div *ngIf="registerForm.get('category')?.errors?.['minSelections']">
-              Se requieren al menos 3 categorías seleccionadas.
-            </div>
-          </div>
+          
+          <small *ngIf="registerForm.get('category')?.errors?.['required'] && submitted" class="text-alert">Categoria es requerido</small>
+
+
 
           <br>
 
           <div class="row" style="margin-left: -19px; margin-right: -19px; padding: 20px; background: #f1f0f0">
             <div class="col-md-8 col-xs-12 button-login">
-              <a routerLink="/login" href="#">Iniciar sesión</a>
+              <a routerLink="/signin" href="#">Iniciar sesión</a>
             </div>
             <div class="col-md-4 col-xs-12">
-              <pichincha-button (clickbutton)="register()"  size="small" id="idButton"
-                color="primary">
+              <pichincha-button [disabled]="registerForm.value.name === '' || registerForm.value.email === '' || registerForm.value.password === '' || registerForm.value.confirmPassword === '' || registerForm.value.category.length<3"   (clickbutton)="register()"  size="small" id="idButton" color="primary">
                 Registrarse
               </pichincha-button>
             </div>

@@ -1,5 +1,6 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 // Tools 
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,6 +20,8 @@ import { BookListComponent } from './components/books/book-list/book-list.compon
 import { BookRegisterComponent } from './components/books/book-register/book-register.component';
 import { BookViewComponent } from './components/books/book-view/book-view.component';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
+import { AlertComponent } from './components/shared/alert/alert.component';
+import { CategoriesComponent } from './components/shared/categories/categories.component';
 
 
 //Interceptors
@@ -32,14 +35,17 @@ import { NavbarComponent } from './components/shared/navbar/navbar.component';
     BookListComponent,
     BookRegisterComponent,
     BookViewComponent,
-    NavbarComponent
+    NavbarComponent,
+    AlertComponent,
+    CategoriesComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    CommonModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent],

@@ -8,10 +8,10 @@ import { BookViewComponent } from './components/books/book-view/book-view.compon
 
 const routes: Routes = [
   {path: 'register', component: RegisterComponent},
-  {path: 'login', component: LoginComponent},
+  {path: 'signin', component: LoginComponent},
   {path: '', component: BookListComponent},
-  {path: 'bookRegister', component: BookRegisterComponent},
-  {path: 'viewBook/:id', component: BookViewComponent}
+  {path: 'book/create', component: BookRegisterComponent},
+  {path: 'book/view/:id', component: BookViewComponent}
 ];
 
 @NgModule({
