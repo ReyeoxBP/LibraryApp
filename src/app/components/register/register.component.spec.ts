@@ -31,5 +31,14 @@ describe('RegisterComponent', () => {
     component.registerForm.controls['category'].setValue('');
     expect(component.registerForm.valid).toBeFalsy();
   });
+
+  it('registerForm should be valid', () => {
+    component.registerForm.controls['name'].setValue('test');
+    component.registerForm.controls['email'].setValue('reyeox@gmail.com');
+    component.registerForm.controls['password'].setValue('Test1234!');
+    component.registerForm.controls['confirmPassword'].setValue('Test1234!');
+    component.registerForm.controls['category'].setValue('1');
+    expect(component.registerForm.valid).toBeTruthy();
+  });
   
 });

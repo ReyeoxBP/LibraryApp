@@ -1,1 +1,12 @@
-<p>categories works!</p>
+<!-- <div *ngFor="let category of categories; let i=index">
+    <input type="checkbox" [value]="category.id"
+      (change)="onCategoryChange(category.id , $event)" />
+    {{ category.description}}
+</div> -->
+  <div class="row" style="margin-left:15px">
+    <div class="form-group form-check" class="col-md-6" *ngFor="let category of categories; let i=index">
+      <input type="checkbox" class="form-check-input" [value]="category.id"
+    (change)="onCategoryChange(category.id , $event)" />
+  {{ category.description}}
+    </div>
+  </div>

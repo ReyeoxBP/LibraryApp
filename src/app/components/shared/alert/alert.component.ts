@@ -20,7 +20,8 @@ export class AlertComponent implements OnInit {
       setTimeout(() => {
         this.mensaje = undefined;
         this.tipo = undefined;
-      }, 3000);
+        window.location.reload();
+      }, 4000);
     });
     
     

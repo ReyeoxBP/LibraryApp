@@ -1,82 +1,68 @@
 import {Component,OnInit} from '@angular/core';
-import { CategoryService } from 'src/app/services/categories/category.service';
-import { Category } from 'src/app/models/category';
-
+import { CategoryService } from '../../../services/categories/category.service';
+import { Category } from '../../../models/category';
+import { TokenStorageService } from '../../../services/auth/token-storage.service';
+import { Router } from '@angular/router';
+import { Book } from '../../../models/book';
+import { BookService } from '../../../services/books/book.service';
 @Component({
   selector: 'app-book-list',
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss']
 })
 export class BookListComponent implements OnInit {
-  // i need to create a book array to store the books
+  
+  
   searchText: string = "";
   categories: Category[] = [];
-  categoryFilter: string = "";
-
-
-  books = [{
-      "id": "6rr14lxl2m2",
-      "title": "string3",
-      "author": "string",
-      "resume": "string",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbyJ2w1-M1esA7LNNYliGSa3fHrR05pfQ7hg&usqp=CAU",
-      "url": "string",
-      "userRegister": "sysd88ervo",
-      "category": [
-        2,
-        3
-      ],
-      "public": true,
-      "isbn13": 2,
-      "price": "asdasdas"
-    },
-    {
-      "id": "wy85a21q1qd",
-      "title": "string1",
-      "author": "string",
-      "resume": "string",
-      "image": "https://static.packt-cdn.com/products/9781785880230/cover/smaller",
-      "url": "string",
-      "userRegister": "sysd88ervo",
-      "category": [
-        2,
-        3
-      ],
-      "public": true,
-      "isbn13": 2,
-      "price": "asdasdas"
-    },
-    {
-      "id": "o5n8vhn7fho",
-      "title": "string2",
-      "author": "string",
-      "resume": "string",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDn__No81oPR4hA9dOTUffJ98TTbYLgnSp2Ab-oM1XatooJxei6Cz91pDKqmArtrDwrq0&usqp=CAU",
-      "url": "string",
-      "userRegister": "sysd88ervo",
-      "category": [
-        2,
-        3
-      ],
-      "public": true,
-      "isbn13": 2,
-      "price": "asdasdas"
-    }
-  ]
+  selectedCategory: number = 0;
+  books: Book[] = [];
+  filteredBooks: Book[] = [];
+  categoriesBP: any[] = [];
 
 
 
-  deleteBook(id: string) {
-    console.log(id)
-  }
-
-  constructor(private categoryService: CategoryService) {
+  constructor(private categoryService: CategoryService
+    , private tokenService: TokenStorageService
+    , private router: Router
+    , private bookService: BookService) {
     this.categoryService.getCategories().subscribe(res =>{
-      this.categories = res;
-      console.log(this.categories);
+    
+      res.forEach((element: any) => {
+        this.categoriesBP.push({value: element.id, label: element.description});
+
+      });
+
+      console.log(this.categoriesBP);
   });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if(this.tokenService.getToken()){
+      this.getBooks();
+    }else{
+      this.router.navigate(['/signin']);
+    }
+
+  }
+
+
+  filterBooks(evt: any): void{
+    let auxCat = evt.detail.value;
+    if(auxCat){
+      this.filteredBooks = this.books.filter(book => book.category.includes(auxCat));
+    }else{
+      this.filteredBooks = this.books;
+    }
+  }
+
+
+  getBooks() : void{
+    this.bookService.getBooksByOwner().subscribe((books: Book[]) =>{
+      this.filteredBooks = books;
+      this.books = books;
+
+    });
+  }
 
 }

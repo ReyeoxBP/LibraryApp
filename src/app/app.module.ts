@@ -22,6 +22,7 @@ import { BookViewComponent } from './components/books/book-view/book-view.compon
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { AlertComponent } from './components/shared/alert/alert.component';
 import { CategoriesComponent } from './components/shared/categories/categories.component';
+import { FilterPipe } from './pipes/filter.pipe';
 
 
 //Interceptors
@@ -37,7 +38,8 @@ import { CategoriesComponent } from './components/shared/categories/categories.c
     BookViewComponent,
     NavbarComponent,
     AlertComponent,
-    CategoriesComponent
+    CategoriesComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,

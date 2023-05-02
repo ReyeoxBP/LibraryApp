@@ -1,3 +1,15 @@
-<div class="alert alert-" *ngIf="mensaje" [ngClass]="tipo?tipo:''" role="alert">
-    {{ mensaje }}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+            <div style="position:fixed; top: 20px; right: 20px; width: 20%" *ngIf="mensaje" [ngClass]="tipo?tipo:''" role="alert">
+                {{mensaje}}
+            </div>        
+        </div>
+        <div class="col-md-4">
+            
+        </div>
+    </div>
 </div>

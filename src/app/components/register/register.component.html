@@ -14,7 +14,7 @@
         <form [formGroup]="registerForm" (ngSubmit)="register()">
           <div class="form-group">
             <label for="nameInput">Nombre de usuario</label>
-            <input class="form-control" type="text" name="nameInput" id="nameInput" formControlName="name"
+            <input [disabled]="submittingProcess" class="form-control" type="text" name="nameInput" id="nameInput" formControlName="name"
               placeholder="Ej. makoto" required>
             <div *ngIf="registerForm.get('name')?.errors?.['exists']">
               <small class="text-alert">El nombre de usuario ya existe, debes seleccionar uno diferente.</small>
@@ -25,7 +25,7 @@
           </div>
           <div class="form-group">
             <label for="emailInput">Correo electrónico</label>
-            <input class="form-control" type="email" name="emailInput" id="emailInput" formControlName="email"
+            <input  [disabled]="submittingProcess" class="form-control" type="email" name="emailInput" id="emailInput" formControlName="email"
               placeholder="Ej. name@example.com" required>
             <div *ngIf="registerForm.get('email')?.errors?.['email']">
               <small class="text-alert">Por favor ingresa un correo electrónico valido.</small>
@@ -37,7 +37,7 @@
           </div>
           <div class="form-group">
             <label for="emailInput">Contraseña</label>
-            <input class="form-control" type="password" name="passwordInput" id="passwordInput"
+            <input  [disabled]="submittingProcess" class="form-control" type="password" name="passwordInput" id="passwordInput"
               formControlName="password" placeholder="******" required>
 
 
@@ -58,7 +58,7 @@
           </div>
           <div class="form-group">
             <label for="emailInput">Confirmar contraseña</label>
-            <input class="form-control" type="password" name="confirmPassword" id="confirmPassword"
+            <input  [disabled]="submittingProcess" class="form-control" type="password" name="confirmPassword" id="confirmPassword"
               formControlName="confirmPassword" placeholder="******" required>
             <div
               *ngIf="registerForm.get('confirmPassword')?.errors?.['required'] && (registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.errors?.['required']) || registerForm.get('confirmPassword')?.errors?.['required'] && submitted">
@@ -71,22 +71,16 @@
           <h4><strong>Categorias</strong></h4>
 
           <div style="height: 300px; overflow: auto;">
-            <div *ngFor="let category of categories; let i=index">
-              <input type="checkbox" formArrayName="category" [value]="category.id"
-                (change)="onCheckboxChange($event)" />
-              {{ category.description}}
-            </div>
+           <app-categories  [disabled]="submittingProcess" [categories]="categories"
+                            [selectedCategories]="selectedCategories"
+                            (categoriesChanged)="onCategoriesChanged($event)"></app-categories>
           </div>
-          <!-- <div *ngIf="registerForm.get('category')?.errors?.['required']">
-            Categorías es obligatorio.
-          </div> -->
-      
-          
-          <div *ngIf="registerForm.get('category')?.errors?.['minSelections'] && showErrorCategory">
+     
+          <div *ngIf="(this.selectedCategories.length===0 && counterActionCat > 0) || (this.selectedCategories.length<3 && counterActionCat > 0)">
             <small class="text-alert">Se requieren al menos 3 categorías seleccionadas.</small>
           </div>
           
-          <small *ngIf="registerForm.get('category')?.errors?.['required'] && submitted" class="text-alert">Categoria es requerido</small>
+          <small *ngIf="this.selectedCategories.length===0 && submitted" class="text-alert">Categoria es requerido</small>
 
 
 
@@ -97,7 +91,7 @@
               <a routerLink="/signin" href="#">Iniciar sesión</a>
             </div>
             <div class="col-md-4 col-xs-12">
-              <pichincha-button [disabled]="registerForm.value.name === '' || registerForm.value.email === '' || registerForm.value.password === '' || registerForm.value.confirmPassword === '' || registerForm.value.category.length<3"   (clickbutton)="register()"  size="small" id="idButton" color="primary">
+              <pichincha-button [disabled]="registerForm.value.name === '' || registerForm.value.email === '' || registerForm.value.password === '' || registerForm.value.confirmPassword === '' || this.selectedCategories.length < 3"   (clickbutton)="register()"  size="small" id="idButton" color="primary">
                 Registrarse
               </pichincha-button>
             </div>

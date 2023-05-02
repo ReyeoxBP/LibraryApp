@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
+import { AlertService } from 'src/app/services/alert/alert.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { TokenStorageService } from 'src/app/services/auth/token-storage.service';
 import { UserService } from 'src/app/services/users/user.service';
@@ -14,10 +15,10 @@ import { UserService } from 'src/app/services/users/user.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   islogged: Boolean = false;
-  constructor(private authService : AuthService, private router: Router, private tokenStorage: TokenStorageService, private userService: UserService) {
+  constructor(private authService : AuthService, private router: Router, private tokenStorage: TokenStorageService, private userService: UserService, private alertService: AlertService) {
     this.loginForm = new FormGroup({      
       'username': new FormControl('', {validators: Validators.required, asyncValidators: this.userNameValid()}),
-      'password': new FormControl('',[Validators.required, Validators.minLength(8)]),
+      'password': new FormControl('',[Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/)]),
     });
    }
 
@@ -40,7 +41,8 @@ export class LoginComponent implements OnInit {
   login(): void{
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
       next: res =>{
-        this.tokenStorage.saveToken(res.accessToken);
+        this.alertService.showSuccess('Inicio de sesión exitoso');
+        this.tokenStorage.saveToken(res.access_token);
         this.tokenStorage.saveUser(res);
         this.reloadPage();
         setTimeout(() => {
@@ -49,6 +51,7 @@ export class LoginComponent implements OnInit {
         
       },
       error: err =>{
+        this.alertService.showError('Error al iniciar sesión');
         console.log(err);
       }
     }
