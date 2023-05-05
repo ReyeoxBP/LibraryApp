@@ -1,13 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, AsyncValidatorFn, ValidatorFn } from '@angular/forms';
 import { Observable, map } from 'rxjs';
-import { UserService } from 'src/app/services/users/user.service';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { CategoryService } from 'src/app/services/categories/category.service';
-import { User } from 'src/app/models/user';
-import { Category } from 'src/app/models/category';
-import { AlertService } from 'src/app/services/alert/alert.service';
+import { UserService } from '../../services/users/user.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { CategoryService } from '../../services/categories/category.service';
+import { User } from '../../models/user';
+import { Category } from '../../models/category';
+import { AlertService } from '../../services/alert/alert.service';
 import { CategoriesComponent } from '../shared/categories/categories.component';
+import { Router } from '@angular/router';
+import { TokenStorageService } from '../../services/auth/token-storage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-register',
@@ -27,13 +30,18 @@ export class RegisterComponent implements OnInit {
   counterActionCat: number = 0;
   submittingProcess: boolean = false;
  
-  constructor(private userService: UserService, private categoryService: CategoryService, private authService: AuthService, private alertService: AlertService) { 
+  constructor(private userService: UserService,
+     private categoryService: CategoryService,
+     private authService: AuthService,
+      private alertService: AlertService,
+       private router: Router,
+        private tokenService: TokenStorageService,
+        private spinner: NgxSpinnerService) { 
     this.registerForm = new FormGroup({
-      'name': new FormControl('', {validators: Validators.required, asyncValidators: this.userNameValid()}),
-      'email': new FormControl('',[Validators.required, Validators.email]),
+      'name': new FormControl('', {validators: [Validators.required, Validators.minLength(3), Validators.max(50)], asyncValidators: this.userNameValid()}),
+      'email': new FormControl('',{validators: [Validators.required, Validators.email, Validators.maxLength(100), Validators.minLength(5)], asyncValidators: this.emailValid()}),
       'password': new FormControl('',[Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/)]),
       'confirmPassword': new FormControl('', {validators: [Validators.required]}),
-      // 'category': new FormArray([], [Validators.required, this.minSelections(3)])
     },this.passwordMatch('password','confirmPassword'));
     this.jsonObject = {
       name: '',
@@ -46,19 +54,14 @@ export class RegisterComponent implements OnInit {
     
 }
 
- 
-
-
   ngOnInit(): void {
-    this.categoryService.getCategories().subscribe(res =>{
-      this.categories = res;
-  });
-
-//   this.categories.forEach(categoria =>{
-//     const control = new FormControl(false); 
-//     this.registerForm.addControl(categoria.description, control);
-// });
-
+    if(this.tokenService.getToken()){
+      this.router.navigateByUrl('/signin');
+    }else{
+      this.categoryService.getCategories().subscribe(res =>{
+        this.categories = res;
+    });
+    }
 }
 
 clearSelectedCategories(){
@@ -75,17 +78,19 @@ clearSelectedCategories(){
       password: this.registerForm.value.password,
       category: this.selectedCategories
     }
+    this.spinner.show();
     this.authService.register(this.jsonObject).subscribe({
       next: res =>{
-        this.submittingProcess = true;
         this.alertService.showSuccess('Usuario registrado correctamente');
+        window.location.reload();
         setTimeout(() => {
-          this.registerForm.reset();
-          this.submitted = false;
+          this.registerForm.reset();          
+          this.spinner.hide();
+          this.selectedCategories = [];
           this.counterActionCat = 0;
-          this.submittingProcess = false;
-          window.location.reload();
-        }, 2000);
+          this.submitted = false;
+        }, 1000);
+  
       },
       error: err =>{
         console.log(err);
@@ -93,17 +98,7 @@ clearSelectedCategories(){
       }
     });
   }
-  
-  minSelections(min: number): ValidatorFn {
-    return (control: AbstractControl) =>{
-      debugger;
-      console.log(control.value);
-      if (control.value && control.value.length < min) {
-        return {minSelections: true};
-      }
-      return null;
-    };
-  }
+
 
   onCategoriesChanged(categories: number[]){
     this.counterActionCat++;
@@ -111,24 +106,7 @@ clearSelectedCategories(){
   }
 
 
-  // onCheckboxChange(event: any) { 
-    
-  //   const selectedCat = (this.registerForm.controls['category'] as FormArray);
-  //   console.log(selectedCat);
-  //   if (event.target.checked) {
-  //     selectedCat.push(new FormControl(parseInt(event.target.value)));
-  //   } else {
-  //     const index = selectedCat.controls
-  //     .findIndex(x => x.value === event.target.value);
-  //     selectedCat.removeAt(index);
-  //   }
-
-  //   if(selectedCat.length===0){
-  //     this.showErrorCategory = true;
-  //   }
-    
-  // }
-
+  // Method to validate password and confirmPassword match
   passwordMatch(password: string, confirmPassword: string): ValidatorFn {
     return (formGroup: AbstractControl): { [key: string]: any } | null => {
       const passwordControl = formGroup.get(password);
@@ -155,25 +133,33 @@ clearSelectedCategories(){
   }
 
 
-
-  matchPasswords(): ValidatorFn{
-    return (control: AbstractControl): { [key: string]: any} | null =>{
-      const password = control.get('password')?.value;
-      const confirmPassword = control.get('confirmPassword')?.value;
-      console.log(control.get('confirmPassword')?.errors);
-      
-      return password && confirmPassword && password.value !== confirmPassword.value ? {'mismatch': true} : null;
+  //Methdo to validate the email Exists
+  emailValid(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null > =>{
+      return this.userService.existEmail(control.value).pipe(
+        map(res =>{
+          let aux: any = res;
+          if(aux.exists){
+            return {'exists': aux.exists};
+          }else{
+            return null;
+          }
+        })
+      );
     }
   }
-
 
   //Method to validate the userName Exists
   userNameValid(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null > =>{
-      return this.userService.userNameValidate(control.value).pipe(
+      return this.userService.existName(control.value).pipe(
         map(res =>{
           let aux: any = res;
-          return res ? {'exists': aux.exists} : null;
+          if(aux.exists){            
+            return {'exists': aux.exists};
+          }else{
+            return null;
+          }
         })
       );
     };

@@ -14,7 +14,7 @@ export class UserService {
 
 
 
-  userNameValidate(name: string): Observable<boolean> { 
+  existName(name: string): Observable<boolean> { 
     return this.http.get<boolean>(`${this.apiUrl}/users/exist-name?name=${name}`);
   }
 

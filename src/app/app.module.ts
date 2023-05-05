@@ -1,10 +1,13 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+// import { HTTP_INTERCEPTORS } from '@angular/common/http';
+// import { SpinnerInterceptor } from './helpers/spinner.interceptor';
 // Tools 
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import {NgxSpinnerModule} from "ngx-spinner";
 
 
 
@@ -23,6 +26,7 @@ import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { AlertComponent } from './components/shared/alert/alert.component';
 import { CategoriesComponent } from './components/shared/categories/categories.component';
 import { FilterPipe } from './pipes/filter.pipe';
+import { PublicListComponent } from './components/books/public-list/public-list.component';
 
 
 //Interceptors
@@ -39,7 +43,8 @@ import { FilterPipe } from './pipes/filter.pipe';
     NavbarComponent,
     AlertComponent,
     CategoriesComponent,
-    FilterPipe
+    FilterPipe,
+    PublicListComponent
   ],
   imports: [
     BrowserModule,
@@ -47,9 +52,12 @@ import { FilterPipe } from './pipes/filter.pipe';
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    NgxSpinnerModule
   ],
   providers: [authInterceptorProviders],
+  // {provide: 'BASE_API_URL', useValue: 'http://localhost:8080/api'}ç
+  // { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

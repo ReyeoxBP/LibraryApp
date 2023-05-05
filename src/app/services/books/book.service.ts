@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Book } from '../../models/book';
 import { TokenStorageService } from '../auth/token-storage.service';
-import { User } from 'src/app/models/user';
+// import { User } from 'src/app/models/user';
 
 interface BookResponse {
   cod: string,
@@ -25,11 +25,27 @@ export class BookService {
     return this.http.get<Book[]>(`${this.apiUrl}/books/owner`, { headers });
   }
 
-  createBook(book: Book, user: User): Observable<BookResponse>{
+  createBook(book: Book): Observable<BookResponse>{
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.tokenService.getToken()}`,
     });
-    return this.http.post<BookResponse>(`${this.apiUrl}/books/owner/`, {book, user} ,{ headers });
+    return this.http.post<BookResponse>(`${this.apiUrl}/books/owner/`, book ,{ headers });
+  }
+
+  getAll(): Observable<Book[]>{
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.tokenService.getToken()}`,
+    });
+    return this.http.get<Book[]>(`${this.apiUrl}/books/`, { headers });
+  }
+
+  getById(id: string | undefined): Observable<Book[]>{
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.tokenService.getToken()}`,
+    });
+    return this.http.get<Book[]>(`${this.apiUrl}/books/getById?id=${id?.toString()}`, { headers });
   }
 }

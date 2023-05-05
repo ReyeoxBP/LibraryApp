@@ -19,6 +19,7 @@ export class BookListComponent implements OnInit {
   books: Book[] = [];
   filteredBooks: Book[] = [];
   categoriesBP: any[] = [];
+  firstTimeFiltered: boolean = true;
 
 
 
@@ -26,13 +27,14 @@ export class BookListComponent implements OnInit {
     , private tokenService: TokenStorageService
     , private router: Router
     , private bookService: BookService) {
+    // const userCategories = this.tokenService.getUser();
     this.categoryService.getCategories().subscribe(res =>{
     
       res.forEach((element: any) => {
         this.categoriesBP.push({value: element.id, label: element.description});
 
       });
-
+      // this.categoriesBP.filter(cat => userCategories.includes(cat));
       console.log(this.categoriesBP);
   });
   }
@@ -47,7 +49,8 @@ export class BookListComponent implements OnInit {
   }
 
 
-  filterBooks(evt: any): void{
+  filterBooks = (evt: any) : void =>{
+    this.firstTimeFiltered = true;
     let auxCat = evt.detail.value;
     if(auxCat){
       this.filteredBooks = this.books.filter(book => book.category.includes(auxCat));
@@ -57,12 +60,16 @@ export class BookListComponent implements OnInit {
   }
 
 
-  getBooks() : void{
+
+
+  getBooks = () : void =>{
     this.bookService.getBooksByOwner().subscribe((books: Book[]) =>{
       this.filteredBooks = books;
       this.books = books;
 
     });
   }
+
+
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertService } from 'src/app/services/alert/alert.service';
+import { AlertService } from '../../../services/alert/alert.service';
 
 @Component({
   selector: 'app-alert',
@@ -20,8 +20,7 @@ export class AlertComponent implements OnInit {
       setTimeout(() => {
         this.mensaje = undefined;
         this.tipo = undefined;
-        window.location.reload();
-      }, 4000);
+      }, 6000);
     });
     
     

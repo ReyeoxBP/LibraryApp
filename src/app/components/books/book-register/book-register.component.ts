@@ -5,8 +5,9 @@ import { CategoryService } from '../../../services/categories/category.service';
 import { Book } from '../../../models/book';
 import { TokenStorageService } from '../../../services/auth/token-storage.service';
 import { Router } from '@angular/router';
-import { BookService } from 'src/app/services/books/book.service';
-import { AlertService } from 'src/app/services/alert/alert.service';
+import { BookService } from '../../../services/books/book.service';
+import { AlertService } from '../../../services/alert/alert.service';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-book-register',
   templateUrl: './book-register.component.html',
@@ -24,7 +25,8 @@ export class BookRegisterComponent implements OnInit {
      private tokenService: TokenStorageService,
       private router: Router, 
       private bookService: BookService,
-      private alertService: AlertService) {
+      private alertService: AlertService,
+      private location: Location) {
     
    }
   
@@ -70,7 +72,6 @@ export class BookRegisterComponent implements OnInit {
     const userObject = this.tokenService.getUser();
     this.registerBook.value.userRegister = userObject.user.userId;
     let objectJson = {
-      id: 0,
       title: this.registerBook.value.title,
       author: this.registerBook.value.author,
       resume: this.registerBook.value.resume,
@@ -82,9 +83,7 @@ export class BookRegisterComponent implements OnInit {
       price: this.registerBook.value.price ? this.registerBook.value.price : '',
       category: this.selectedCategories
     }
-    debugger;
-    console.log(objectJson);
-    this.bookService.createBook(objectJson, userObject).subscribe({
+    this.bookService.createBook(objectJson).subscribe({
       next: res => {
         this.alertService.showSuccess('Libro registrado exitosamente');
         this.router.navigate(['/']);
@@ -93,6 +92,10 @@ export class BookRegisterComponent implements OnInit {
         this.alertService.showError(err.error.message);
       }
     });
+  }
+
+  back(): void {
+    this.location.back();
   }
   
 

@@ -17,6 +17,7 @@ export class CategoriesComponent implements OnInit {
 
 
   onCategoryChange(categoryId: number, event: any) {
+    debugger;
     if (event.target.checked) {
       this.selectedCategories.push(categoryId);
     } else {
