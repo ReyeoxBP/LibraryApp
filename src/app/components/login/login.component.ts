@@ -39,11 +39,6 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  reloadPage(): void {
-    window.location.reload();
-  }
-
-
   login(): void{
     this.spinner.show();
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({

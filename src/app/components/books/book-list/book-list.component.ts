@@ -5,6 +5,7 @@ import { TokenStorageService } from '../../../services/auth/token-storage.servic
 import { Router } from '@angular/router';
 import { Book } from '../../../models/book';
 import { BookService } from '../../../services/books/book.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-book-list',
   templateUrl: './book-list.component.html',
@@ -26,7 +27,8 @@ export class BookListComponent implements OnInit {
   constructor(private categoryService: CategoryService
     , private tokenService: TokenStorageService
     , private router: Router
-    , private bookService: BookService) {
+    , private bookService: BookService
+    , private spinner: NgxSpinnerService) {
     // const userCategories = this.tokenService.getUser();
     this.categoryService.getCategories().subscribe(res =>{
     
@@ -40,8 +42,12 @@ export class BookListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.spinner.show();
     if(this.tokenService.getToken()){
       this.getBooks();
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 500);
     }else{
       this.router.navigate(['/signin']);
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, AsyncValidatorFn, ValidatorFn } from '@angular/forms';
 import { Observable, map } from 'rxjs';
 import { UserService } from '../../services/users/user.service';
@@ -7,10 +7,10 @@ import { CategoryService } from '../../services/categories/category.service';
 import { User } from '../../models/user';
 import { Category } from '../../models/category';
 import { AlertService } from '../../services/alert/alert.service';
-import { CategoriesComponent } from '../shared/categories/categories.component';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../../services/auth/token-storage.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Component({
   selector: 'app-register',
@@ -20,12 +20,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class RegisterComponent implements OnInit {
     
   // Declaration Vars
-  @ViewChild(CategoriesComponent) appCategories: CategoriesComponent | undefined;
   registerForm: FormGroup;
   categories: Category[] = [];
   jsonObject: User;
   submitted: boolean = false;
-  showErrorCategory: boolean = false;
   selectedCategories: number[] = [];
   counterActionCat: number = 0;
   submittingProcess: boolean = false;
@@ -64,10 +62,6 @@ export class RegisterComponent implements OnInit {
     }
 }
 
-clearSelectedCategories(){
-  this.selectedCategories = [];
-  this.appCategories?.cleanSelectedCategories();
-}
 
 
   register(): void{

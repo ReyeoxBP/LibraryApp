@@ -27,6 +27,7 @@ export class PublicListComponent implements OnInit {
      private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
+    this.spinner.show();
     if(this.tokenService.getToken()){
           this.bookService.getBooksByOwner().subscribe((books: Book[]) => {
             this.books = books;
@@ -39,7 +40,9 @@ export class PublicListComponent implements OnInit {
           this.categoryService.getCategories().subscribe((categories: Category[]) => {
             this.categories = categories;
           });
-          this.spinner.hide();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
     }else{
       this.router.navigate(['/signin']);
     }

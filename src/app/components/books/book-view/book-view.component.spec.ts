@@ -3,6 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BookViewComponent } from './book-view.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('BookViewComponent', () => {
   let component: BookViewComponent;
@@ -12,7 +13,8 @@ describe('BookViewComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ BookViewComponent ],
       imports: [ HttpClientTestingModule, RouterTestingModule ],
-      providers: [ {provide: ActivatedRoute, useValue : { params: { id: 1 } }} ]
+      providers: [ {provide: ActivatedRoute, useValue : { params: { id: 1 } }} ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   });

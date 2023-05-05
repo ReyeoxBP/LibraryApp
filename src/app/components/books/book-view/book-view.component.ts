@@ -6,6 +6,7 @@ import { Book } from '../../../models/book';
 import { CategoryService } from '../../../services/categories/category.service';
 import { Category } from '../../../models/category';
 import { Location } from '@angular/common'; 
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-book-view',
   templateUrl: './book-view.component.html',
@@ -17,10 +18,12 @@ export class BookViewComponent implements OnInit {
   book: Book | undefined ;
   constructor(private bookService: BookService, private route: ActivatedRoute, private tokenService: TokenStorageService, private router: Router,
     private categoryService: CategoryService,
-    private location: Location) { }
+    private location: Location,
+    private spinner: NgxSpinnerService) { }
 
 
   ngOnInit(): void {
+    this.spinner.show();
     this.categoryService.getCategories().subscribe(res =>{
       this.categoryList = res;
     });
@@ -37,6 +40,9 @@ export class BookViewComponent implements OnInit {
           });
         });
         this.categoryString = categoryArray.join(', ');
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
       });
     }else{
       this.router.navigate(['/signin']);

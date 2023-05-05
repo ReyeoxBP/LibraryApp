@@ -1,7 +1,7 @@
 <div class="container" style="margin-top: 40px">
   <h2>Registro Libro</h2>
 
-  <form formGroupName="registerBook" [formGroup]="registerBook" (ngSubmit)="onSubmit()">
+  <form  [formGroup]="registerBook" (ngSubmit)="registerBookFn()">
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
@@ -92,8 +92,8 @@
                         Cancelar
                     </pichincha-button>
                 </div>
-                <div class="col-md-4">                    
-                    <pichincha-button disabled="{{registerBook.get('title')?.errors?.['required'] || registerBook.get('author')?.errors?.['required'] || registerBook.get('url')?.errors?.['required'] || registerBook.get('image')?.errors?.['required'] || registerBook.get('resume')?.errors?.['required'] || selectedCategories.length<1 }}" (clickbutton)="onSubmit()" size="large"  id="button"  color="primary">
+                <div class="col-md-4">          
+                    <pichincha-button [disabled]="registerBook.invalid && selectedCategories.length < 1"  (clickbutton)="registerBookFn()" size="large"  id="button"  color="primary">
                         Registrar
                     </pichincha-button>
                 </div>

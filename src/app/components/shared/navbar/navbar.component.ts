@@ -28,7 +28,7 @@ export class NavbarComponent implements OnInit {
     setTimeout(() => {
       this.alertService.showSuccess('Sesión cerrada correctamente');
     this.spinner.hide();
-    }, 3000);
+    }, 1000);
 
   }
 
