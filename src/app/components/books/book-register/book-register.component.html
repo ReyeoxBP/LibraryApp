@@ -1,0 +1,104 @@
+<div class="container" style="margin-top: 40px">
+  <h2>Registro Libro</h2>
+
+  <form  [formGroup]="registerBook" (ngSubmit)="registerBookFn()">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Nombre del libro</label>
+          <input type="text" class="form-control" formControlName="title" placeholder="Ej. Angular + NGRX">
+
+          <div *ngIf="registerBook.get('title')?.touched && registerBook.get('title')?.errors?.['required']">
+            <small class="text-alert">El nombre del libro es requerido.</small>
+          </div>
+        </div>
+       
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Nombre del autor</label>
+          <input type="text" class="form-control" formControlName="author" placeholder="Ej. Eduardo Henández">
+          <div *ngIf="registerBook.get('author')?.touched && registerBook.get('author')?.errors?.['required']">
+            <small class="text-alert">El nombre del autor es requerido.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">URL del libro</label>
+          <input type="text" class="form-control" formControlName="url"
+            placeholder="Ej. https://books-all.com/sabhjxm2kk">
+            <div *ngIf="registerBook.get('url')?.touched && registerBook.get('url')?.errors?.['required']">
+              <small class="text-alert">La URL del libro es requerida.</small>
+            </div>
+            <div *ngIf="registerBook.get('url')?.dirty && registerBook.get('url')?.errors?.['pattern']">
+              <small class="text-alert">Debe diligenciar una URL correcta.</small>
+            </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Imagen de portada</label>
+          <input type="text" class="form-control" formControlName="image" placeholder="Ej. https://media.com/book/978-1-4842-2307-9">
+          <div *ngIf="registerBook.get('image')?.dirty && registerBook.get('image')?.errors?.['required']">
+            <small class="text-alert">No se cargó imagen, se definirá una por defecto.</small>
+          </div>
+          <div *ngIf="registerBook.get('image')?.dirty && registerBook.get('image')?.errors?.['pattern']">
+            <small class="text-alert">Debe diligenciar una URL de imagen correcta.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="resumen">Resumen del libro</label>
+          <textarea class="form-control" id="resumen" formControlName="resume" rows="3"></textarea>
+          <div *ngIf="registerBook.get('resume')?.touched && registerBook.get('resume')?.errors?.['required']">
+            <small class="text-alert">Debe diligenciar un resumen, mínimo 10 carácteres.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input" id="public" formControlName="public">
+          <label class="form-check-label" for="public">Publicar</label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12" style="height:200px; overflow: auto;padding-left: 42px">
+        <app-categories [categories]="categories" [selectedCategories]="selectedCategories"
+          (categoriesChanged)="onCategoriesChanged($event)"></app-categories>
+      </div>
+      <div
+        *ngIf="(this.selectedCategories.length === 0 && counterActionCat > 0 || (this.selectedCategories.length<1 && counterActionCat > 0))">
+        <small class="text-alert">Se requieren al menos 1 categorías seleccionadas.</small>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-4 text-right">
+                    <pichincha-button (click)="back()" size="large"  id="button"  color="secondary">
+                        Cancelar
+                    </pichincha-button>
+                </div>
+                <div class="col-md-4">          
+                    <pichincha-button [disabled]="registerBook.invalid && selectedCategories.length < 1"  (clickbutton)="registerBookFn()" size="large"  id="button"  color="primary">
+                        Registrar
+                    </pichincha-button>
+                </div>
+            </div>
+        </div>
+    </div>
+  </form>
+</div>

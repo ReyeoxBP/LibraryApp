@@ -1,0 +1,64 @@
+<div class="container" style="margin-top: 10px">
+    <div class="row">
+      <div class="col-md-2 col-lg-3">
+  
+      </div>
+      <div class="col-md-8 col-lg-6">
+  
+        <div class="container-card">
+          <div class="container-card-header">
+            <h3>Iniciar sesion</h3>
+          </div>
+          <hr>
+          <form [formGroup]="loginForm">
+
+            <div class="form-group">
+              <label for="nameInput">Nombre de usuario</label>
+              <input class="form-control" type="text" name="nameInput" id="nameInput" formControlName="username"
+                placeholder="Ej. makoto" required>
+              <div *ngIf="loginForm.get('username')?.errors?.['exists']">
+                <small class="text-alert">El nombre de usuario no existe, debes registrarte.</small>
+              </div>
+              <div *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.value===''">
+                <small class="text-alert">Nombre de usuario requerido.</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="emailInput">Contraseña</label>
+              <input class="form-control" type="password" name="passwordInput" id="passwordInput"
+                formControlName="password" placeholder="******" required>
+            </div>
+            <div
+              *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
+              <div *ngIf="loginForm.get('password')?.errors?.['minlength']">
+                <small class="text-alert">La contraseña debe tener al menos 8 carácteres</small>
+              </div>
+              <div *ngIf="loginForm.get('password')?.errors?.['pattern']">
+                <small class="text-alert">La contraseña debe tener al menos una mayúscula, un número y un carácter
+                  especial</small>
+              </div>
+            </div>
+            <br>         
+  
+            <div class="row" style="margin-left: -19px; margin-right: -19px; padding: 20px; background: #f1f0f0">
+              <div class="col-md-6 col-xs-12 button-login">
+                <a routerLink="/register" href="#">Registrate Aquí</a>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <pichincha-button [disabled]="loginForm.get('password')?.invalid && loginForm.get('username')?.invalid || disabledButton" (clickbutton)="login()" size="small" id="idButton" color="primary">
+                  Iniciar sesion
+                </pichincha-button>
+              </div>
+            </div>
+          </form>
+  
+        </div>
+  
+  
+      </div>
+      <div class="col-md-2 col-lg-3">
+  
+      </div>
+    </div>
+  </div>
+  

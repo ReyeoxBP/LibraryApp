@@ -1,0 +1,74 @@
+<div class="container">
+  <div class="row my-4">
+    <div class="col-md-4">
+      <div class="row">
+        <div class="col-md-6">
+          <pichincha-button (click)="back()" size="large" id="button" color="secondary">
+            Regresar
+          </pichincha-button>
+        </div>
+        <div class="col-md-6">
+          <pichincha-button [disabled]="true" routerLink="/books" size="large" id="button" color="primary">
+            Editar
+          </pichincha-button>
+        </div>
+      </div>
+
+    </div>
+    
+  </div>
+  <br>
+  <div class="row my-4">
+    <div class="col-md-1"></div>
+    <div class="col-md-3">
+      <div class="card mb-4 box-shadow">
+        <div class="card-body card-book">
+          <img [src]="book?.image" class="img-fluid" alt="{{book?.image}}">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-2">
+          <p><strong>Título</strong></p>
+        </div>
+        <div class="col-md-6 text-left">
+          {{book?.title}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+            <p><strong>Autor</strong></p>
+        </div>
+        <div class="col-md-6 text-left">
+            {{book?.author}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+            <p><strong>URL del libro</strong></p>
+        </div>
+        <div class="col-md-6 text-left">
+            {{book?.url}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+            <p><strong>Resumen</strong></p>
+        </div>
+        <div class="col-md-6 text-left">
+            <p>{{book?.resume}}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+            <p><strong>Categorias</strong></p>
+        </div>
+        <div class="col-md-6 text-left">
+            <p>{{categoryString}}.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

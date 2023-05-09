@@ -1,0 +1,67 @@
+<div class="container">
+  <div class="row my-4">
+    <div class="col-md-12">
+      <h2>Tus Libros</h2>
+    </div>
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-3" *ngFor="let book of books.slice(0,4)">
+          <div class="card mb-4 box-shadow">
+            <div class="card-body card-book">
+              <a href="#" routerLink="/book/view/{{book.id}}" style="width: 100%; height: 100%"> <img class="card-img-top"
+                  style="height: 286px" src="{{book.image}}" alt="{{book.title}}"></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8" *ngIf="books.length===0&&firstTimeFiltered"> 
+          <br>
+          <p>No hay libros publicados por tu cuenta.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-12" *ngIf="books.length !== 0">
+      <pichincha-button routerLink="/book/private" type="button" id="more" color="secondary" size="small">Ver más</pichincha-button>
+    </div>
+    
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <h2>Publicaciones</h2>
+    </div>
+    <div class="row my-4">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-4" *ngFor="let book of publicBooks | filter: searchText; let i = index">
+            <div class="card card-book mb-4 box-shadow">
+              <a href="#" routerLink="/book/view/{{book.id}}" style="width: 100%; height: 100%">
+              <img src="{{book.image}}" alt="{{book.title}}" style="height: 286px" class="card-img-top"></a>
+            </div>
+      
+            <ng-container *ngIf="(i+1) % 3 === 0">
+              <div class="col-md-8"></div>
+            </ng-container>
+          </div>
+     
+          <div class="col-md-8" *ngIf="publicBooks.length===0&&firstTimeFiltered || publicBooks.length === 0 && searchText !== ''"> 
+            <p>No hay información asociada a los filtros.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-book">
+          <div class="card-body">
+            <div class="form-group">
+              <label class="form-label" for="search">Buscar</label>
+              <input class="form-control" type="text" [(ngModel)]="searchText" (ngModelChange)="filterBooksByText(searchText)" placeholder="Ej. Angular, React"/>
+            </div>
+            <div class="form-group" style="overflow: auto; height: 200px;">
+              <app-categories [categories]="categories" (categoriesChanged)="filterBooks($event)"></app-categories>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+</div>
