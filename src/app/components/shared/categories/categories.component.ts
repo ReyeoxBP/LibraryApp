@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Category } from 'src/app/models/category';
 
 @Component({
@@ -13,6 +13,21 @@ export class CategoriesComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.selectedCategories = this.selectedCategories || [];
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['selectedCategories'] && this.selectedCategories){
+      this.selectedCategories = [...this.selectedCategories];
+      this.updateCheckedState();
+    }
+    
+  }
+
+  updateCheckedState(){
+    for(const category of this.categories){
+      category.checked = this.selectedCategories.includes(category.id);      
+    }
   }
 
 
@@ -25,9 +40,5 @@ export class CategoriesComponent implements OnInit {
     this.categoriesChanged.emit(this.selectedCategories);
   }
 
-  cleanSelectedCategories() {
-    this.selectedCategories = [];
-    this.categoriesChanged.emit(this.selectedCategories);
-  }
 
 }

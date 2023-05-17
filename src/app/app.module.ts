@@ -27,7 +27,7 @@ import { AlertComponent } from './components/shared/alert/alert.component';
 import { CategoriesComponent } from './components/shared/categories/categories.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { PublicListComponent } from './components/books/public-list/public-list.component';
-import { EditBookComponent } from './components/books/edit-book/edit-book.component';
+import { BookEditComponent } from './components/books/book-edit/book-edit.component';
 
 
 //Interceptors
@@ -46,7 +46,7 @@ import { EditBookComponent } from './components/books/edit-book/edit-book.compon
     CategoriesComponent,
     FilterPipe,
     PublicListComponent,
-    EditBookComponent
+    BookEditComponent
   ],
   imports: [
     BrowserModule,

@@ -8,7 +8,7 @@
           </pichincha-button>
         </div>
         <div class="col-md-6">
-          <pichincha-button [disabled]="true" routerLink="/books" size="large" id="button" color="primary">
+          <pichincha-button *ngIf="book?.userRegister === userId" routerLink="/book/edit/{{book?.id}}" size="large" id="button" color="primary">
             Editar
           </pichincha-button>
         </div>
@@ -23,7 +23,7 @@
     <div class="col-md-3">
       <div class="card mb-4 box-shadow">
         <div class="card-body card-book">
-          <img [src]="book?.image" class="img-fluid" alt="{{book?.image}}">
+          <a [href]="book?.url" ><img [src]="book?.image" class="img-fluid" [alt]="book?.image"></a>
         </div>
       </div>
     </div>

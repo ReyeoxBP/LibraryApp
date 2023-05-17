@@ -15,7 +15,7 @@
             <div class="form-group">
               <label for="nameInput">Nombre de usuario</label>
               <input class="form-control" type="text" name="nameInput" id="nameInput" formControlName="username"
-                placeholder="Ej. makoto" required>
+                placeholder="Ej. makoto" (keyup.enter)="login()" required>
               <div *ngIf="loginForm.get('username')?.errors?.['exists']">
                 <small class="text-alert">El nombre de usuario no existe, debes registrarte.</small>
               </div>
@@ -26,7 +26,7 @@
             <div class="form-group">
               <label for="emailInput">Contraseña</label>
               <input class="form-control" type="password" name="passwordInput" id="passwordInput"
-                formControlName="password" placeholder="******" required>
+                formControlName="password" placeholder="******" (keyup.enter)="login()" required>
             </div>
             <div
               *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
@@ -45,7 +45,7 @@
                 <a routerLink="/register" href="#">Registrate Aquí</a>
               </div>
               <div class="col-md-6 col-xs-12">
-                <pichincha-button [disabled]="loginForm.get('password')?.invalid && loginForm.get('username')?.invalid || disabledButton" (clickbutton)="login()" size="small" id="idButton" color="primary">
+                <pichincha-button (keyup.enter)="login()" [disabled]="loginForm.get('password')?.invalid && loginForm.get('username')?.invalid || disabledButton" (clickbutton)="login()" size="small" id="idButton" color="primary">
                   Iniciar sesion
                 </pichincha-button>
               </div>

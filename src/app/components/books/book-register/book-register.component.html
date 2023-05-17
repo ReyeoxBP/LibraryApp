@@ -93,7 +93,7 @@
                     </pichincha-button>
                 </div>
                 <div class="col-md-4">          
-                    <pichincha-button [disabled]="registerBook.invalid && selectedCategories.length < 1"  (clickbutton)="registerBookFn()" size="large"  id="button"  color="primary">
+                    <pichincha-button [disabled]="registerBook.invalid || selectedCategories.length < 1"  (clickbutton)="registerBookFn()" size="large"  id="button"  color="primary">
                         Registrar
                     </pichincha-button>
                 </div>

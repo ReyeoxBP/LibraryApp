@@ -32,11 +32,14 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     if(this.tokenStorage.getToken()){
       this.islogged = true;
+      this.spinner.hide();
       this.router.navigate(['/']);
     }else{
       this.islogged = false;
-
+      this.spinner.hide();
     }
+
+   
   }
 
   login(): void{
@@ -78,5 +81,6 @@ export class LoginComponent implements OnInit {
       );
     };
   }
+  
 
 }

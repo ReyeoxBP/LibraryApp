@@ -14,12 +14,15 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class BookViewComponent implements OnInit {
   categoryList: Category[] = [];
+  userId: String = "";
   categoryString: string = '';
   book: Book | undefined ;
   constructor(private bookService: BookService, private route: ActivatedRoute, private tokenService: TokenStorageService, private router: Router,
     private categoryService: CategoryService,
     private location: Location,
-    private spinner: NgxSpinnerService) { }
+    private spinner: NgxSpinnerService) { 
+      this.userId = this.tokenService.getUser().user.userId;
+    }
 
 
   ngOnInit(): void {
@@ -54,21 +57,6 @@ export class BookViewComponent implements OnInit {
   }
 
 
-  //     this.bookService.getBooksByOwner().subscribe(res =>{
-  //       this.book = res.find(book => book.id?.toString() === id);
-  //       this.book?.category.forEach(element => {
-  //         this.categoryList.forEach(res =>{
-  //           if(res.id === element){
-  //              categoryArray.push(res.description);
-  //           }
-  //         });
-  //       });
-  //       this.categoryString = categoryArray.join(', ');
-  //     }); 
-  //   }else{
-  //     this.router.navigate(['/signin']);
-  //   }
-   
-  // }
+  
 
 }

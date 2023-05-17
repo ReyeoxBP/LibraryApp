@@ -4,7 +4,7 @@
 
         </div>
         <div class="col-md-4">
-            <div style="position:fixed; top: 20px; right: 20px; width: 20%" *ngIf="mensaje" [ngClass]="tipo?tipo:''" role="alert">
+            <div style="position:fixed; top: 20px; right: 20px; width: 20%; z-index: 100;" *ngIf="mensaje" [ngClass]="tipo?tipo:''" role="alert">
                 {{mensaje}}
             </div>        
         </div>

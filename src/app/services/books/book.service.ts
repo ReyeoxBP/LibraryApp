@@ -33,6 +33,14 @@ export class BookService {
     return this.http.post<BookResponse>(`${this.apiUrl}/books/owner/`, book ,{ headers });
   }
 
+  editBook(book: Book): Observable<BookResponse>{
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.tokenService.getToken()}`,
+    });
+    return this.http.post<BookResponse>(`${this.apiUrl}/books/editBook/`, book ,{ headers });
+  }
+
   getAll(): Observable<Book[]>{
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

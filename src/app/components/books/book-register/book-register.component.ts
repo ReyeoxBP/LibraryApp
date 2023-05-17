@@ -76,7 +76,7 @@ export class BookRegisterComponent implements OnInit {
       next: res => {
         console.log(res);
         this.alertService.showSuccess('Libro registrado exitosamente');
-        this.router.navigate(['/']);
+        this.back();
         this.spinner.hide();
       },
       error: err => {
