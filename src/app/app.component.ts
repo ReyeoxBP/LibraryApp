@@ -8,9 +8,8 @@ import { TokenStorageService } from './services/auth/token-storage.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'jest-angular';
   showNavBar: boolean = false;
-  constructor(private tokenStorage: TokenStorageService) {
+  constructor(public tokenStorage: TokenStorageService) {
     
   }
 
@@ -22,7 +21,7 @@ export class AppComponent {
     }
   }
 
-  ngOnchanges(): void {
+  ngOnChanges(): void {
     if(this.tokenStorage.getToken()){
       this.showNavBar = true;
     }else{

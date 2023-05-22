@@ -20,8 +20,8 @@ export class BookViewComponent implements OnInit {
   constructor(private bookService: BookService, private route: ActivatedRoute, private tokenService: TokenStorageService, private router: Router,
     private categoryService: CategoryService,
     private location: Location,
-    private spinner: NgxSpinnerService) { 
-      this.userId = this.tokenService.getUser().user.userId;
+    public spinner: NgxSpinnerService) { 
+      this.userId = this.tokenService.getUser().user?.userId;
     }
 
 
@@ -31,8 +31,16 @@ export class BookViewComponent implements OnInit {
       this.categoryList = res;
     });
     if(this.tokenService.getToken()){
-      const categoryArray: string[] = [];
-      const id = this.route.snapshot.paramMap.get('id');
+      this.getDetailInfo();
+    }else{
+      this.router.navigate(['/signin']);
+    }
+  }
+
+
+  getDetailInfo(): void{
+    const categoryArray: string[] = [];
+      const id = this.route.snapshot?.paramMap.get('id');
       this.bookService.getAll().subscribe(res =>{
         this.book = res.filter(book => book.id?.toString() === id)[0];
         this.book?.category.forEach(element => {
@@ -47,9 +55,6 @@ export class BookViewComponent implements OnInit {
           this.spinner.hide();
         }, 500);
       });
-    }else{
-      this.router.navigate(['/signin']);
-    }
   }
 
   back(): void{

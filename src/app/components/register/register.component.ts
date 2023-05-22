@@ -76,7 +76,7 @@ export class RegisterComponent implements OnInit {
     this.authService.register(this.jsonObject).subscribe({
       next: res =>{
         this.alertService.showSuccess('Usuario registrado correctamente');
-        window.location.reload();
+        // window.location.reload();
         setTimeout(() => {
           this.registerForm.reset();          
           this.spinner.hide();
@@ -87,7 +87,6 @@ export class RegisterComponent implements OnInit {
   
       },
       error: err =>{
-        console.log(err);
         this.alertService.showError('Error al registrar el usuario');
       }
     });

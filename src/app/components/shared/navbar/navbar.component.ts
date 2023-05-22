@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigateByUrl('/signin');
     setTimeout(() => {
       this.alertService.showSuccess('Sesión cerrada correctamente');
-    this.spinner.hide();
+      this.spinner.hide();
     }, 1000);
 
   }

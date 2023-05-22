@@ -4,6 +4,7 @@ import { AppComponent } from './app.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('AppComponent', () => {
+  let component: AppComponent;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -18,20 +19,42 @@ describe('AppComponent', () => {
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
-  // it(`should have as title 'jest-angular'`, () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   const app = fixture.componentInstance;
-  //   expect(app.title).toEqual('jest-angular');
-  // });
+  it('should set showNavBar to true when token is present in ngOnInit', () => { // <-- added
+    const getTokenSpy = jest.spyOn(component.tokenStorage, 'getToken').mockReturnValue('fakeToken');
+    component.ngOnInit();
+    expect(component.showNavBar).toBe(true);
+    expect(getTokenSpy).toHaveBeenCalled();
+    getTokenSpy.mockRestore();
+  });
 
-  // it('should render title', () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   fixture.detectChanges();
-  //   const compiled = fixture.nativeElement as HTMLElement;
-  //   expect(compiled.querySelector('.content span')?.textContent).toContain('jest-angular app is running!');
-  // });
+  it('should set showNavBar to false when token is not present in ngOnInit', () => { // <-- added
+    const getTokenSpy = jest.spyOn(component.tokenStorage, 'getToken').mockReturnValue(null);
+    component.ngOnInit();
+    expect(component.showNavBar).toBe(false);
+    expect(getTokenSpy).toHaveBeenCalled();
+    getTokenSpy.mockRestore();
+  });
+
+  it('should set showNavBar to true when token is present in ngOnChanges', () => { // <-- added
+    const getTokenSpy = jest.spyOn(component.tokenStorage, 'getToken').mockReturnValue('fakeToken');
+    component.ngOnChanges();
+    expect(component.showNavBar).toBe(true);
+    expect(getTokenSpy).toHaveBeenCalled();
+    getTokenSpy.mockRestore();
+  });
+
+  it('should set showNavBar to false when token is not present in ngOnChanges', () => { // <-- added
+    const getTokenSpy = jest.spyOn(component.tokenStorage, 'getToken').mockReturnValue(null);
+    component.ngOnChanges();
+    expect(component.showNavBar).toBe(false);
+    expect(getTokenSpy).toHaveBeenCalled();
+    getTokenSpy.mockRestore();
+  });
+
+
 });

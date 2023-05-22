@@ -28,30 +28,22 @@ export class BookListComponent implements OnInit {
     , private tokenService: TokenStorageService
     , private router: Router
     , private bookService: BookService
-    , private spinner: NgxSpinnerService) {
-    // const userCategories = this.tokenService.getUser();
-    this.categoryService.getCategories().subscribe(res =>{
-    
-      res.forEach((element: any) => {
-        this.categoriesBP.push({value: element.id, label: element.description});
-
-      });
-      // this.categoriesBP.filter(cat => userCategories.includes(cat));
-      console.log(this.categoriesBP);
-  });
-  }
+    , private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.spinner.show();
     if(this.tokenService.getToken()){
+      this.categoryService.getCategories().subscribe((res) => {
+        res.forEach((element: any) => {
+          this.categoriesBP.push({ value: element.id, label: element.description });
+        });
+      });
       this.getBooks();
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
-    }else{
-      this.router.navigate(['/signin']);
-    }
-
+    }else
+    { this.router.navigate(['/signin']); }
   }
 
 

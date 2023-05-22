@@ -49,11 +49,11 @@ export class BookService {
     return this.http.get<Book[]>(`${this.apiUrl}/books/`, { headers });
   }
 
-  getById(id: string | undefined): Observable<Book[]>{
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.tokenService.getToken()}`,
-    });
-    return this.http.get<Book[]>(`${this.apiUrl}/books/getById?id=${id?.toString()}`, { headers });
-  }
+  // getById(id: string | undefined): Observable<Book[]>{
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'Authorization': `Bearer ${this.tokenService.getToken()}`,
+  //   });
+  //   return this.http.get<Book[]>(`${this.apiUrl}/books/getById?id=${id?.toString()}`, { headers });
+  // }
 }

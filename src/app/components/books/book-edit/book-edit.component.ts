@@ -15,21 +15,28 @@ import { CategoryService } from '../../../services/categories/category.service';
   styleUrls: ['./book-edit.component.scss']
 })
 export class BookEditComponent implements OnInit {
-  book: Book | undefined ;
+  book: Book;
   selectedCategories: number[] = [];
   categories: Category[] = [];
   counterActionCat: number = 0;
-  constructor(private bookService: BookService,
-     private route: ActivatedRoute,
-      private spinner: NgxSpinnerService, 
-      private tokenService: TokenStorageService,
-        private alertService: AlertService,
-         private location: Location,
-         private categoryService: CategoryService) { }
+  constructor(public bookService: BookService, private route: ActivatedRoute, public spinner: NgxSpinnerService, private tokenService: TokenStorageService, private alertService: AlertService, private location: Location, private categoryService: CategoryService) {
+    this.book  = {
+      title: '',
+      author: '',
+      resume: '',
+      image: '',
+      url: '',
+      userRegister: '',
+      category: [],
+      public: false,
+      isbn13: 0,
+      price: ''
+    };
+   }
 
   ngOnInit(): void {
     this.spinner.show();
-    const id = this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot?.paramMap.get('id');
     this.getCategories();
     this.getDetailInfo(id!);
   }
@@ -49,7 +56,6 @@ export class BookEditComponent implements OnInit {
   onCategoriesChanged(category: number[]) {
     this.counterActionCat++;
     this.selectedCategories = category;
-    console.log(this.selectedCategories);
   }
 
 
@@ -74,7 +80,7 @@ export class BookEditComponent implements OnInit {
       resume: this.editBook.value.resume,
       image: this.editBook.value.image,
       url: this.editBook.value.url,
-      userRegister: userObject.user.userId,
+      userRegister: userObject.user?.userId,
       public: this.editBook.value.public,
       isbn13: false ? this.editBook.value.isbn13 : '',
       price: false ? this.editBook.value.price : '',
@@ -83,7 +89,6 @@ export class BookEditComponent implements OnInit {
     this.spinner.show();
     this.bookService.editBook(objectJson).subscribe({
       next: res => {
-        console.log(res);
         this.alertService.showSuccess('Se ha editado de manera correcta.');
         this.back();
         setTimeout(() => {
