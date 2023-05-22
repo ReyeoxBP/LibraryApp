@@ -51,13 +51,12 @@ export class LoginComponent implements OnInit {
           this.tokenStorage.saveToken(res.access_token);
           this.tokenStorage.saveUser(res);
           this.router.navigate(['/']);
-          window.location.reload();
+          // window.location.reload();
         }, 1000);
       },
-      error: err =>{
+      error: () =>{
         this.spinner.hide();
         this.alertService.showError('Error al iniciar sesión');
-        console.log(err);
       }
     }
     );

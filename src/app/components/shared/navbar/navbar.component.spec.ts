@@ -7,6 +7,7 @@ import { NavbarComponent } from './navbar.component';
 import { TokenStorageService } from '../../../services/auth/token-storage.service';
 import { AlertService } from '../../../services/alert/alert.service';
 import { Router } from '@angular/router';
+import { LoginComponent } from '../../login/login.component';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -18,7 +19,7 @@ describe('NavbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule.withRoutes([{path: 'signin', component: LoginComponent}])],
       declarations: [NavbarComponent],
       providers: [TokenStorageService, AlertService, NgxSpinnerService]
     }).compileComponents();

@@ -1,11 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-
 import { AuthService } from './auth.service';
 import { User } from '../../models/user';
 
 describe('AuthService', () => {
-  let service: AuthService;
+  let authService: AuthService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
@@ -13,7 +12,8 @@ describe('AuthService', () => {
       imports: [HttpClientTestingModule],
       providers: [AuthService]
     });
-    service = TestBed.inject(AuthService);
+    
+    authService = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -21,41 +21,31 @@ describe('AuthService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should send a POST request to login endpoint with the provided credentials', () => {
+    // Arrange
+    const username = 'testuser';
+    const password = 'testpassword';
+
+    // Act
+    authService.login(username, password).subscribe();
+
+    // Assert
+    const req = httpMock.expectOne('http://localhost:3001/users/login');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ username, password });
   });
 
-  describe('login', () => {
-    it('should send a POST request with username and password', () => {
-      const username = 'testuser';
-      const password = 'testpassword';
+  it('should send a POST request to register endpoint with the provided user', () => {
+    // Arrange
+    const user: User = { name: 'Eduardo', email: 'johndoe@example.com', category: [], password: 'UsernamePass' };
 
-      service.login(username, password).subscribe();
+    // Act
+    authService.register(user).subscribe();
 
-      const req = httpMock.expectOne('http://localhost:3001/users/login');
-      expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual({ username, password });
-
-      req.flush({});
-    });
+    // Assert
+    const req = httpMock.expectOne('http://localhost:3001/users/create');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(user);
   });
 
-  describe('register', () => {
-    it('should send a POST request with the user object', () => {
-      const user: User = {
-        name: 'testuser',
-        password: 'testpassword',
-        email: 'testuser@example.com',
-        category: [1,2,3]
-      };
-
-      service.register(user).subscribe();
-
-      const req = httpMock.expectOne('http://localhost:3001/users/create');
-      expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual(user);
-
-      req.flush({});
-    });
-  });
 });

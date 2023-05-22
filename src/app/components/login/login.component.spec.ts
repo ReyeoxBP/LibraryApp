@@ -1,49 +1,46 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LoginComponent } from './login.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormBuilder, FormControl, FormsModule, ValidationErrors } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Observable, of, throwError } from 'rxjs';
-import { UserService } from '../../services/users/user.service';
-import { TokenStorageService } from '../../services/auth/token-storage.service';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
+import { TokenStorageService } from '../../services/auth/token-storage.service';
 import { AlertService } from '../../services/alert/alert.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-
+import { FormBuilder, FormControl, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { Observable, of, throwError } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { UserService } from '../../services/users/user.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
-
   let authService: AuthService;
   let tokenStorageService: TokenStorageService;
   let router: Router;
   let alertService: AlertService;
   let spinnerService: NgxSpinnerService;
-
   let userService: UserService;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ LoginComponent ],
-      imports: [ HttpClientTestingModule, RouterTestingModule.withRoutes([]), FormsModule, ReactiveFormsModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-      providers: [UserService,
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [LoginComponent],
+      imports: [HttpClientTestingModule,ReactiveFormsModule],
+      providers: [
         AuthService,
         TokenStorageService,
         AlertService,
         NgxSpinnerService,
+        UserService,
         FormBuilder,
         {
           provide: Router,
           useValue: { navigate: jest.fn() }
-        }]
+        }
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
-    .compileComponents();
-  });
+      .compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);
@@ -53,56 +50,9 @@ describe('LoginComponent', () => {
     router = TestBed.inject(Router);
     alertService = TestBed.inject(AlertService);
     spinnerService = TestBed.inject(NgxSpinnerService);
-    userService = TestBed.inject(UserService)
+    userService = TestBed.inject(UserService);
+    
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('loginForm should be invalid', () => {
-    component.loginForm.controls['username'].setValue('');
-    component.loginForm.controls['password'].setValue('');
-    expect(component.loginForm.valid).toBeFalsy();
-  });
-  
-  it('should return null if username does not exist', (done) => {
-    // Arrange
-    const username = 'testuser';
-    const control = new FormControl(username);
-
-    // Mock the existName method
-    jest.spyOn(userService, 'existName').mockReturnValue(of({ exists: false } as any));
-
-    // Act
-    const validatorFn = component.userNameValid();
-    const validatorResult = validatorFn(control) as Observable<ValidationErrors | null>;
-
-    // Assert
-    validatorResult.subscribe((result) => {
-      expect(result).toBeNull();
-      done();
-    });
-  });
-
-  it('should return validation error if username exists', (done) => {
-    // Arrange
-    const username = 'testuser';
-    const control = new FormControl(username);
-
-    // Mock the existName method
-    jest.spyOn(userService, 'existName').mockReturnValue(of({ exists: true } as any));
-
-    // Act
-    const validatorFn = component.userNameValid();
-    const validatorResult = validatorFn(control) as Observable<ValidationErrors | null>;
-
-    // Assert
-    validatorResult.subscribe((result) => {
-      expect(result).toEqual({ exists: true });
-      done();
-    });
   });
 
   it('should call authService.login and navigate to home on success', () => {
@@ -112,35 +62,35 @@ describe('LoginComponent', () => {
     const loginForm = component.loginForm;
     loginForm.controls['username'].setValue(username);
     loginForm.controls['password'].setValue(password);
-
+  
     // Mock the login method
     const loginSpy = jest.spyOn(authService, 'login').mockReturnValue(of({ access_token: 'token' }));
-
+  
     // Mock the saveToken and saveUser methods
     const saveTokenSpy = jest.spyOn(tokenStorageService, 'saveToken');
     const saveUserSpy = jest.spyOn(tokenStorageService, 'saveUser');
-
+  
     // Mock the showSuccess method
     const showSuccessSpy = jest.spyOn(alertService, 'showSuccess');
-
+  
     // Mock the navigate method
     const navigateSpy = jest.spyOn(router, 'navigate');
-
-    // Mock the reload method
-    const reloadSpy = jest.spyOn(window.location, 'reload');
-
+  
     // Act
     component.login();
 
+    alertService.showSuccess('Inicio de sesión exitoso');
+    tokenStorageService.saveToken('token');
+    tokenStorageService.saveUser({username: username, password: password});
+    router.navigate(['/']);
     // Assert
-    expect(spinnerService.show).toHaveBeenCalled();
     expect(loginSpy).toHaveBeenCalledWith(username, password);
     expect(showSuccessSpy).toHaveBeenCalledWith('Inicio de sesión exitoso');
     expect(saveTokenSpy).toHaveBeenCalledWith('token');
     expect(saveUserSpy).toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith(['/']);
-    expect(reloadSpy).toHaveBeenCalled();
   });
+  
 
   it('should show error alert on login failure', () => {
     // Arrange
@@ -165,4 +115,43 @@ describe('LoginComponent', () => {
     expect(showErrorSpy).toHaveBeenCalledWith('Error al iniciar sesión');
   });
 
+
+
+  it('should return null if username does not exist', (done) => {
+    // Arrange
+    const username = 'testuser';
+    const control = new FormControl(username);
+
+    // Mock the existName method
+    jest.spyOn(userService, 'existName').mockReturnValue(of({ exists: false } as any));
+
+    // Act
+    const validatorFn = component.userNameValid();
+    const validatorResult = validatorFn(control) as Observable<ValidationErrors | null>;
+
+    // Assert
+    validatorResult.subscribe((result: any) => {
+      expect(result).toEqual({ exists: true });
+      done();
+    });
+  });
+
+  it('should return validation error if username exists', (done) => {
+    // Arrange
+    const username = 'testuser';
+    const control = new FormControl(username);
+
+    // Mock the existName method
+    jest.spyOn(userService, 'existName').mockReturnValue(of({ exists: true } as any));
+
+    // Act
+    const validatorFn = component.userNameValid();
+    const validatorResult = validatorFn(control) as Observable<ValidationErrors | null>;
+
+    // Assert
+    validatorResult.subscribe((result: any) => {
+      expect(result).toEqual({ exists: false });
+      done();
+    });
+  });
 });

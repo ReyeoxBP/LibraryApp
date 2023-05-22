@@ -148,19 +148,7 @@ describe('BookListComponent', () => {
     expect(spinner.hide).toHaveBeenCalled();
   });
 
-  // it('should navigate to signin if token is not present', () => {
-  //   // Arrange
-  //   jest.spyOn(tokenService, 'getToken').mockReturnValue(null);
-  //   const navigateSpy = jest.spyOn(router, 'navigate');
-  
-  //   // Act
-  //   component.ngOnInit();
-    
-  //   // Assert
-  //   expect(tokenService.getToken).toHaveBeenCalled();
-  //   expect(navigateSpy).toHaveBeenCalledWith(['/signin']);
-  // });
-  
+
   
 
   

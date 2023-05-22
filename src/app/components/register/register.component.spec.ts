@@ -15,6 +15,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from '../../services/alert/alert.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { UserService } from '../../services/users/user.service';
+import { LoginComponent } from '../login/login.component';
 
 
 
@@ -34,7 +35,7 @@ describe('RegisterComponent', () => {
   
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports:  [ HttpClientTestingModule, RouterTestingModule, FormsModule, ReactiveFormsModule ],
+      imports:  [ HttpClientTestingModule, RouterTestingModule.withRoutes([{path: 'signin', component: LoginComponent}]), FormsModule, ReactiveFormsModule ],
       declarations: [ RegisterComponent ],
       providers: [CategoryService, TokenStorageService,AuthService, AlertService, NgxSpinnerService, FormBuilder, UserService],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
