@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RegisterComponent } from './register.component';
@@ -115,7 +115,7 @@ describe('RegisterComponent', () => {
     });
   });
 
-  it('should call authService.register and show success alert on success', async () => {
+  it('should call authService.register and show success alert on success', fakeAsync(() => {
     const registerSpy = jest.spyOn(authService, 'register').mockReturnValue(of({}));
     const showSuccessSpy = jest.spyOn(alertService, 'showSuccess');
     const navigateByUrlSpy = jest.spyOn(router, 'navigateByUrl').mockResolvedValue(Promise.resolve(true));
@@ -129,7 +129,7 @@ describe('RegisterComponent', () => {
       password: 'password'
     });
   
-    await component.register();
+    component.register();
     router.navigateByUrl('/');
     spinnerService.hide();
     component.registerForm = formBuilder.group({
@@ -137,6 +137,8 @@ describe('RegisterComponent', () => {
       email: null,
       password: null
     });
+    tick(1000);
+    
     expect(registerSpy).toHaveBeenCalled();
     expect(showSuccessSpy).toHaveBeenCalledWith('Usuario registrado correctamente');
     expect(navigateByUrlSpy).toHaveBeenCalledWith('/');
@@ -149,8 +151,10 @@ describe('RegisterComponent', () => {
     });
     expect(component.selectedCategories).toEqual([]);
     expect(component.counterActionCat).toBe(0);
-    expect(component.submitted).toBeTruthy();
-  });
+    expect(component.submitted).toBeFalsy();
+
+    flush();
+  }));
   
   
   

@@ -1,5 +1,5 @@
 import { LoginComponent } from './login.component';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
@@ -55,7 +55,7 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should call authService.login and navigate to home on success', () => {
+  it('should call authService.login and navigate to home on success', fakeAsync(() => {
     // Arrange
     const username = 'testuser';
     const password = 'testpassword';
@@ -78,6 +78,7 @@ describe('LoginComponent', () => {
   
     // Act
     component.login();
+    tick(1000);
 
     alertService.showSuccess('Inicio de sesión exitoso');
     tokenStorageService.saveToken('token');
@@ -89,7 +90,8 @@ describe('LoginComponent', () => {
     expect(saveTokenSpy).toHaveBeenCalledWith('token');
     expect(saveUserSpy).toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith(['/']);
-  });
+    flush();
+  }));
   
 
   it('should show error alert on login failure', () => {

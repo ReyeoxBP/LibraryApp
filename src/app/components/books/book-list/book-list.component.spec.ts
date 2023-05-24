@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -131,7 +131,7 @@ describe('BookListComponent', () => {
     expect(component.categoriesBP).toEqual(categoriesBPMock);
   });
 
-  it('should call getBooks and hide spinner if token is present', () => {
+  it('should call getBooks and hide spinner if token is present', fakeAsync(() => {
     // Arrange
     jest.spyOn(tokenService, 'getToken').mockReturnValue('mock-token');
     jest.spyOn(component, 'getBooks');
@@ -141,12 +141,14 @@ describe('BookListComponent', () => {
     component.ngOnInit();
     
     component.getBooks();
+    tick(500);
     spinner.hide();
+    flush();
     // Assert
     expect(tokenService.getToken).toHaveBeenCalled();
     expect(component.getBooks).toHaveBeenCalled();
     expect(spinner.hide).toHaveBeenCalled();
-  });
+  }));
 
 
   

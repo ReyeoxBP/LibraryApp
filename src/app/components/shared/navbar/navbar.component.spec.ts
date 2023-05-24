@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { of } from 'rxjs';
@@ -59,7 +59,7 @@ describe('NavbarComponent', () => {
   });
 
   describe('logout', () => {
-    it('should sign out, navigate to "/signin", show success message, and hide spinner', () => {
+    it('should sign out, navigate to "/signin", show success message, and hide spinner', fakeAsync(() => {
       jest.spyOn(tokenStorageService, 'signOut');
       jest.spyOn(spinnerService, 'show');
       jest.spyOn(spinnerService, 'hide');
@@ -71,9 +71,14 @@ describe('NavbarComponent', () => {
       expect(tokenStorageService.signOut).toHaveBeenCalled();
       expect(spinnerService.show).toHaveBeenCalled();
       expect(router.navigateByUrl).toHaveBeenCalledWith('/signin');
+      tick(1000);
+      
+      
       expect(alertService.showSuccess).toHaveBeenCalledWith('Sesión cerrada correctamente');
       spinnerService.hide();
       expect(spinnerService.hide).toHaveBeenCalled();
-    });
+
+      flush();
+    }));
   });
 });

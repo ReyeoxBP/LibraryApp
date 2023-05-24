@@ -1,5 +1,5 @@
 import { PublicListComponent } from './public-list.component';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -48,6 +48,46 @@ describe('PublicListComponent', () => {
     url: 'http://test.com',
     userRegister: "n6x5yji3ta",
   }];
+  const publishBackup: Book[] =[{
+    id: 1,
+    title: 'Test',
+    author: 'Author',
+    category: [1, 2, 3],
+    image: 'http://test.com/image.jpg',
+    isbn13: 123,
+    price: '2000',
+    public: true,
+    resume: 'Little resume',
+    url: 'http://test.com',
+    userRegister: "n6x5yji3ta",
+  },
+  {
+    id: 2,
+    title: 'Test',
+    author: 'Author',
+    category: [1, 2],
+    image: 'http://test.com/image.jpg',
+    isbn13: 123,
+    price: '2000',
+    public: true,
+    resume: 'Little resume',
+    url: 'http://test.com',
+    userRegister: "n6x5yji3ta",
+  },
+  {
+    id: 3,
+    title: 'Test',
+    author: 'Author',
+    category: [3],
+    image: 'http://test.com/image.jpg',
+    isbn13: 123,
+    price: '2000',
+    public: true,
+    resume: 'Little resume',
+    url: 'http://test.com',
+    userRegister: "n6x5yji3ta",
+  }
+  ];
 
   const categories: Category[] = [{ id: 1, description: 'Category 1', checked: false }, { id: 2, description: 'Category 2', checked: false }];
 
@@ -81,7 +121,7 @@ describe('PublicListComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should fetch books, categories, and hide spinner when token is present', () => {
+  it('should fetch books, categories, and hide spinner when token is present',  fakeAsync(() => {
     // Arrange
     jest.spyOn(tokenStorageService, 'getToken').mockReturnValue('token');
 
@@ -100,30 +140,15 @@ describe('PublicListComponent', () => {
     expect(bookService.getBooksByOwner).toHaveBeenCalled();
     expect(bookService.getAll).toHaveBeenCalled();
     expect(categoryService.getCategories).toHaveBeenCalled();
+    tick(500);
     spinnerService.hide();
     expect(hideSpy).toHaveBeenCalled();
     expect(component.books).toEqual(books);
     expect(component.publicBooksBackup).toEqual(books);
     expect(component.publicBooks).toEqual(books);
     expect(component.categories).toEqual(categories);
-    // expect(router.navigate).not.toHaveBeenCalled();
-  });
-
-  // it('should navigate to signin when token is not present', () => {
-  //   // Arrange
-  //   jest.spyOn(tokenStorageService, 'getToken').mockReturnValue(null);
-  //   const navigateSpy = jest.spyOn(router, 'navigate');
-
-  //   // Act
-  //   component.ngOnInit();
-    
-  //   // Assert
-    
-  //   expect(bookService.getBooksByOwner).not.toHaveBeenCalled();
-  //   expect(bookService.getAll).not.toHaveBeenCalled();
-  //   expect(categoryService.getCategories).not.toHaveBeenCalled();
-  //   expect(navigateSpy).toHaveBeenCalledWith(['/signin']);
-  // });
+    flush();
+  }));
 
 
 it('should fetch books, categories, and hide spinner when token is present', () => {
@@ -187,46 +212,7 @@ it('should filter books based on selected categories', () => {
   ];
 
   // Mock the publicBooksBackup
-  component.publicBooksBackup = [{
-    id: 1,
-    title: 'Test',
-    author: 'Author',
-    category: [1, 2, 3],
-    image: 'http://test.com/image.jpg',
-    isbn13: 123,
-    price: '2000',
-    public: true,
-    resume: 'Little resume',
-    url: 'http://test.com',
-    userRegister: "n6x5yji3ta",
-  },
-  {
-    id: 2,
-    title: 'Test',
-    author: 'Author',
-    category: [1, 2],
-    image: 'http://test.com/image.jpg',
-    isbn13: 123,
-    price: '2000',
-    public: true,
-    resume: 'Little resume',
-    url: 'http://test.com',
-    userRegister: "n6x5yji3ta",
-  },
-  {
-    id: 3,
-    title: 'Test',
-    author: 'Author',
-    category: [3],
-    image: 'http://test.com/image.jpg',
-    isbn13: 123,
-    price: '2000',
-    public: true,
-    resume: 'Little resume',
-    url: 'http://test.com',
-    userRegister: "n6x5yji3ta",
-  }
-  ];
+  component.publicBooksBackup = publishBackup;
 
   // Mock the filterBooksBackup
   component.publicBooks = component.publicBooksBackup;
@@ -253,6 +239,32 @@ it('should reset books to publicBooksBackup when no categories are selected', ()
   // Assert
   expect(component.firstTimeFiltered).toBe(true);
   expect(component.publicBooks).toEqual(allBooks);
+});
+
+it('should filter books by text', () => {
+  // Arrange
+  component.publicBooksBackup = publishBackup;
+
+  // Act
+  component.filterBooksByText('book');
+
+  // Assert
+  expect(component.searchText).toEqual('book');
+  expect(component.publicBooks).toEqual([]);
+
+  // Act
+  component.filterBooksByText('another');
+
+  // Assert
+  expect(component.searchText).toEqual('another');
+  expect(component.publicBooks).toEqual([]);
+
+  // Act
+  component.filterBooksByText('');
+
+  // Assert
+  expect(component.searchText).toEqual('');
+  expect(component.publicBooks).toEqual(publishBackup);
 });
 
 });

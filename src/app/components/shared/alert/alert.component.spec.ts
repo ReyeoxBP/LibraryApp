@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { AlertComponent } from './alert.component';
 import { AlertService } from '../../../services/alert/alert.service';
 import { Observable, of } from 'rxjs';
@@ -38,7 +38,7 @@ describe('AlertComponent', () => {
     expect(component.tipo).toBe(alerta.tipo);
   });
 
-  it('should reset mensaje and tipo after 5 seconds', () => {
+  it('should reset mensaje and tipo after 5 seconds', fakeAsync(() => {
     const alerta: Alerta = { tipo: 'success', mensaje: 'This is a success message' };
     jest.spyOn(alertService, 'obtenerAlerta').mockReturnValue(of(alerta));
 
@@ -46,13 +46,13 @@ describe('AlertComponent', () => {
     expect(component.mensaje).toBe(alerta.mensaje);
     expect(component.tipo).toBe(alerta.tipo);
 
-    jest.useFakeTimers();
-    jest.advanceTimersByTime(5001);
+    tick(5000);
     component.mensaje = '';
     component.tipo = '';
     expect(component.mensaje).toBe('');
     expect(component.tipo).toBe('');
-  });
+    flush();
+  }));
 
   it('should call closeAlert method', () => {
     jest.spyOn(component, 'closeAlert');
