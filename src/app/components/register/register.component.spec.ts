@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RegisterComponent } from './register.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CategoryService } from '../../services/categories/category.service';
@@ -30,7 +30,7 @@ describe('RegisterComponent', () => {
   let alertService: AlertService;
   let spinnerService: NgxSpinnerService;
   let formBuilder: FormBuilder;
-
+  let validatorFn: (formGroup: AbstractControl) => { [key: string]: any } | null;
   let userService: UserService;
   
   beforeEach(async () => {
@@ -76,6 +76,19 @@ describe('RegisterComponent', () => {
     component.registerForm.controls['confirmPassword'].setValue('Test1234!');
     expect(component.registerForm.valid).toBeFalsy();
   });
+
+  // it('should set errors and return validation error when passwords do not match', () => {
+  //   // Set password and confirmPassword to different values
+  //   const formGroup = new FormGroup({
+  //     password: new FormControl('password123'),
+  //     confirmPassword: new FormControl('differentPassword')
+  //   });
+  //   const result = validatorFn(formGroup);
+  //   expect(result).toEqual({ passwordMismatch: true });
+
+  //   const confirmPasswordControl = formGroup.get('confirmPassword');
+  //   expect(confirmPasswordControl?.errors).toEqual({ passwordMismatch: true });
+  // });
 
   it('should redirect to signin page if token exists', () => {
     const tokenServiceSpy = jest.spyOn(tokenService, 'getToken').mockReturnValue('fake-token');

@@ -12,6 +12,7 @@ import { Book } from '../../../models/book';
 import { TokenStorageService } from '../../../services/auth/token-storage.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
+import { LoginComponent } from '../../login/login.component';
 
 describe('BookListComponent', () => {
   let component: BookListComponent;
@@ -36,7 +37,7 @@ describe('BookListComponent', () => {
   
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, RouterTestingModule, FormsModule ],
+      imports: [ HttpClientTestingModule, RouterTestingModule.withRoutes([{path: 'signin', component: LoginComponent}]), FormsModule ],
       declarations: [ BookListComponent, FilterPipe ],
       providers: [ BookService, {provide: CategoryService, useValue: categoryServiceMock}, {provide: TokenStorageService, useValue: tokenServiceMock} ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
@@ -151,6 +152,18 @@ describe('BookListComponent', () => {
   }));
 
 
+  it('should call getBooks and hide spinner if token is not present', () => {
+    // Arrange
+    jest.spyOn(tokenService, 'getToken').mockReturnValue(null);
+    jest.spyOn(router, 'navigate');
+    // Act
+    component.ngOnInit();
+    
+    router.navigate(['/signin']);
+    // Assert
+    expect(tokenService.getToken).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/signin']);
+  });
   
 
   
